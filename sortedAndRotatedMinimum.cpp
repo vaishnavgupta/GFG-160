@@ -14,6 +14,9 @@ class Solution {
     // And if it is sorted we compare its minimum element
     // And after that we will skip this half
 
+
+    // NOT CORRECT
+
     int findMin(vector<int>& arr) {
         int n = arr.size();
         int lo = 0;
