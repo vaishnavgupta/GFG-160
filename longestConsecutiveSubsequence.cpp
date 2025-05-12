@@ -46,10 +46,11 @@ class Solution {
                 int curr = arr[i];
                 int cnt = 0;
                 while(st.find(curr) != st.end()){
+                    //Remove to avoid recalculation
+                    st.erase(curr);                     //CHANGE
                     cnt++;
                     curr++;
-                    //Remove to avoid recalculation
-                    st.erase(curr);
+                    
                 }
                 mx = max(cnt,mx);
             }
