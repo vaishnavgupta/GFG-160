@@ -2,42 +2,37 @@
 using namespace std;
 
 class Solution {
-  public:
-    void solve(int row,int col,vector<vector<char>>& mat,vector<vector<bool>>& isVisited,string& word,int n,int m,bool &flag){
-        if(word == ""){
-            flag = true;
-            return;
+public:
+    bool isPossible(vector<vector<char>>& board,int row,int col,string word,int idx){
+        //Recursive Function
+        if(row<0 || col<0 || row>=board.size() || col>=board[0].size() || board[row][col]=='#' || board[row][col]!=word[idx]){
+            return false;
         }
-        if(row<0 || col<0 || row>=n || row>=m){
-            return;
-        }
-        if(mat[row][col] == word[0]){
-            char ch = word[0];
-            word = word.substr(1);
-            isVisited[row][col] = true;
-            if(row-1>=0) solve(row-1,col,mat,isVisited,word,n,m,flag);
-            if(col-1>=0) solve(row,col-1,mat,isVisited,word,n,m,flag);
-            if(row+1<n) solve(row+1,col,mat,isVisited,word,n,m,flag);
-            if(col+1<m) solve(row,col+1,mat,isVisited,word,n,m,flag);
-            //Restoring
-            word = ch + word;
-            isVisited[row][col] = false;
-        }
-        else{
-            if(row-1>=0) solve(row-1,col,mat,isVisited,word,n,m,flag);
-            if(col-1>=0) solve(row,col-1,mat,isVisited,word,n,m,flag);
-            if(row+1<n) solve(row+1,col,mat,isVisited,word,n,m,flag);
-            if(col+1<m) solve(row,col+1,mat,isVisited,word,n,m,flag);
-        }
+        if(idx == word.length()-1) return true;
+
+        //Marking visited
+        char ch = word[idx];
+        board[row][col] = '#';
+
+        bool ans = isPossible(board,row+1,col,word,idx+1) ||
+        isPossible(board,row,col+1,word,idx+1) ||
+        isPossible(board,row-1,col,word,idx+1) ||
+        isPossible(board,row,col-1,word,idx+1); 
+
+        //Restoring word
+        board[row][col] = ch;
+
+        return ans;       
     }
-    
-    bool isWordExist(vector<vector<char>>& mat, string& word) {
-        
-        int n = mat.size();
-        int m = mat[0].size();
-        vector<vector<bool>> visit(n, vector<bool>(m, false));
-        bool flag = false;
-         solve(0,0,mat,visit,word,n,m,flag);
-        return flag;
+
+    bool exist(vector<vector<char>>& board, string word) {
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                if(board[i][j] == word[0] && isPossible(board,i,j,word,0)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 };
